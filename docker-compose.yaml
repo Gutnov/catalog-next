@@ -1,0 +1,15 @@
+name: catalog
+services:
+  db:
+    image: mysql:8.4.0
+    container_name: catalog-db
+    restart: unless-stopped
+    ports:
+      - ${DB_PORT}:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PWD}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PWD}
+      - MYSQL_DATABASE=${DB_NAME}
+    volumes:
+      - ./mysql-data:/var/lib/mysql
