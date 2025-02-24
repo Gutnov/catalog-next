@@ -1,6 +1,8 @@
 import { Model, DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize'
 import sequelize from '@/app/db/db'
 
+export type CompanyDto = InferAttributes<Company>
+
 export class Company extends Model<InferAttributes<Company>, InferCreationAttributes<Company>> {
   declare id: number
   declare name: string

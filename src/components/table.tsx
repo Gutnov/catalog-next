@@ -16,12 +16,13 @@ import {
     DropdownItem
   } from "@heroui/dropdown";
   import {Button} from "@heroui/button";
-  import Link from "next/link";
+  // import Link from "next/link";
   import { VerticalDotsIcon } from '@/components/icons/verticalDotsIcon';
 
   import { Pagination } from "@heroui/pagination";
-  import { Company } from "@/types";
-  
+  import {CompanyDto} from "@/app/db/company";
+// import { Company } from "@/types";
+
   const columns = [
     {
       key: "id",
@@ -42,13 +43,13 @@ import {
   ];
 
   type Props = {
-    list: Company[],
+    list: CompanyDto[],
     onChangePage: (page: number) => void,
     totalPages: number,
     page: number
   }
-  
-  export default function TableComponent({list, onChangePage, totalPages, page}: Props) {        
+
+  export default function TableComponent({list, onChangePage, totalPages, page}: Props) {
     return (
       <Table aria-label="Example table with dynamic content"
       bottomContent={
@@ -90,7 +91,7 @@ import {
                     </DropdownMenu>
                   </Dropdown>
                 </div>
-                  
+
                 ) : (
                   getKeyValue(item, columnKey) // Для остальных столбцов отображаем обычные данные
                 )}
@@ -102,4 +103,3 @@ import {
       </Table>
     );
   }
-  

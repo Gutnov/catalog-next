@@ -1,42 +1,38 @@
 "use client"
 
-import {useEffect, useState, useCallback} from "react";
-import {getCompanies} from "@/app/actions/company";
 import Table from "@/components/table";
-import {Company} from "@/types";
+import {CompanyDto} from "@/app/db/company";
+import {usePathname, useSearchParams, useRouter} from "next/navigation";
 
 type Props = {
-    companiesData: {
-        list: Company[],
-        totalPages: number
-    }
+    companies: CompanyDto[];
+    totalCount: number;
 }
 
-export default function CompanyList({companiesData}: Props){
-    const [page, setPage] = useState(1);
-    const [companiesList, setCompaniesList] = useState(companiesData.list);
-    const [totalPages, setTotalPages] = useState(companiesData.totalPages);
-    
-    const loadCompanies = useCallback(async () => {
-        const data = await getCompanies(page, 5);
-        setCompaniesList(data.list);
-        setTotalPages(data.totalPages);
-    }, [page]);
+export default function CompanyList({companies, totalCount}: Props){
+    const queryParams = useSearchParams();
 
-    useEffect(() => {
-        if (page === 1 && companiesData.list.length > 0) {
-            setCompaniesList(companiesData.list); 
-            setTotalPages(companiesData.totalPages);
-        } else {
-            loadCompanies();
-        }
-    }, [page, loadCompanies, companiesData]);
+    const page = queryParams.get("page")
+        ? Number(queryParams.get("page"))
+        : 1
 
-    const changePage = (page: number)=>{        
-        setPage(page)
+    const itemsPerPage = queryParams.get("itemsPerPage")
+        ? Number(queryParams.get("itemsPerPage"))
+        : 5
+
+    const router = useRouter()
+    const pathname = usePathname()
+
+    const changePage = (page: number)=>{
+        const searchParams = queryParams ?
+            new URLSearchParams(queryParams.toString()) :
+            new URLSearchParams()
+
+        searchParams.set("page", String(page))
+        router.push(pathname + "?" + searchParams.toString());
     }
 
     return (<>
-        <Table list={companiesList} onChangePage={changePage} totalPages={totalPages} page={page}/>
+        <Table list={companies} onChangePage={changePage} totalPages={Math.ceil(totalCount/itemsPerPage)} page={page}/>
         </>)
 }
