@@ -3,10 +3,20 @@
 import CompanyList from "@/components/catalog";
 import {getCompanies} from "@/app/actions/company";
 
-export default async function Catalog(){
-    const companies = await getCompanies(1, 3);
+type Props = {
+    searchParams: Promise<{page?: string, itemsPerPage?: string}>
+}
+
+export default async function Catalog({searchParams}: Props){
+
+    const {page = 1, itemsPerPage = 5} = await searchParams
+
+    const {companies, totalCount} = await getCompanies(Number(page), Number(itemsPerPage));
     return (<>
-        <div>Hello catalog page!</div>
-        <CompanyList initialCompanies={companies}/>
+        <h1 className="text-3xl font-bold mb-10">Каталог компаний</h1>
+        <CompanyList
+            companies={companies}
+            totalCount={totalCount}
+        />
     </>)
 }

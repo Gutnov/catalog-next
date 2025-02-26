@@ -25,9 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={'antialiased'}
+        className={'antialiased py-5'}
       >
-        {children}
+        <div className="container">
+          {children}
+        </div>
       </body>
     </html>
   );

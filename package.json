@@ -10,7 +10,14 @@
     "sync": "npx tsx src/app/db/sync.ts"
   },
   "dependencies": {
+    "@heroui/button": "^2.2.13",
+    "@heroui/dropdown": "^2.3.13",
+    "@heroui/pagination": "^2.2.12",
+    "@heroui/system": "^2.4.10",
+    "@heroui/table": "^2.2.12",
+    "@heroui/theme": "^2.4.9",
     "dotenv": "^16.4.7",
+    "framer-motion": "^12.4.7",
     "mysql2": "^3.12.0",
     "next": "15.1.7",
     "pg-hstore": "^2.3.4",
