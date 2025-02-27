@@ -43,16 +43,18 @@ export default function CompanyList({companies, totalCount}: Props){
         router.push(pathname + "?" + searchParams.toString());
     }
 
-    const createCompany = async (payload:{name: string, createdYear: number}) => {
-        try {
-            await createCompanyAction(payload)
-        } catch (error) {
-            alert(error)
-        }
-    }
+    // const createCompany = async (payload:{name: string, createdYear: number}) => {
+    //     try {
+    //         await createCompanyAction(payload)
+    //     } catch (error) {
+    //         alert(error)
+    //     }
+    // }
 
     return (<>
-        <CompanyModal isOpen={isOpen} onOpenChange={toggleModal} closeModal={closeModal} onSubmit={createCompany}/>
+        <CompanyModal isOpen={isOpen} onOpenChange={toggleModal} closeModal={closeModal}
+                      // onSubmit={createCompany}
+        />
         <Button onPress={() => toggleModal(true)} color='secondary' className='mb-5'>
             Добавить компанию
             <PlusIcon/>
