@@ -1,10 +1,11 @@
 "use server"
 
 export default async function Home() {
-  const persons = ['mama', 'papa']
   return (
     <div>
-        {persons.map((person, index) => (<p key={index}>{person}</p>))}
+       <h1 className='text-3xl font-black'>
+          Главная
+       </h1>
     </div>
   );
 }

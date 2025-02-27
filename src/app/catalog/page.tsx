@@ -10,7 +10,7 @@ type Props = {
 export default async function Catalog({searchParams}: Props){
 
     const {page = 1, itemsPerPage = 5} = await searchParams
-
+    
     const {companies, totalCount} = await getCompanies(Number(page), Number(itemsPerPage));
     return (<>
         <h1 className="text-3xl font-bold mb-10">Каталог компаний</h1>

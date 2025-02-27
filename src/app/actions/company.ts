@@ -14,3 +14,20 @@ export const getCompanies = async (page: number, limit: number): Promise<{compan
         totalCount: count
     }
 }
+
+export const  createCompanyAction = async (data: { name: string, createdYear: number }): Promise<CompanyDto> => {
+    if (!data.name) {
+        throw new Error("Company name cannot be empty");
+    }
+    try {
+        const newCompany = await Company.create({
+            name: data.name,
+            createdYear: data.createdYear
+        });
+
+        return newCompany.toJSON();
+    } catch (error) {
+        console.error("Ошибка при создании компании:", error);
+        throw new Error("Something went wrong");
+    }
+}
