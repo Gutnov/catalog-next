@@ -21,8 +21,7 @@ import {
 
   import { Pagination } from "@heroui/pagination";
   import {CompanyDto} from "@/app/db/company";
-// import { Company } from "@/types";
-
+  
   const columns = [
     {
       key: "id",
@@ -50,7 +49,7 @@ import {
   }
 
   export default function TableComponent({list, onChangePage, totalPages, page}: Props) {
-    return (
+    return (<>
       <Table aria-label="Example table with dynamic content"
       bottomContent={
         <div className="flex w-full justify-center">
@@ -101,5 +100,6 @@ import {
           )}
         </TableBody>
       </Table>
+      </>
     );
   }
