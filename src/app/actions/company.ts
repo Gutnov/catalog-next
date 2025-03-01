@@ -47,6 +47,15 @@ export const  createCompanyAction = async (
     }
     let newCompany
     try {
+        const existingCompany = await Company.findOne({
+            where: { name },
+        });
+
+        if (existingCompany) {
+            return {
+                error: 'Компания с таким названием уже существует',
+            };
+        }
         newCompany = await Company.create({
             name: name,
             createdYear: year

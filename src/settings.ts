@@ -1,0 +1,1 @@
+export const MIN_COMPANY_YEAR = 1900
