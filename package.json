@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroui/button": "2.2.13",
     "@heroui/dropdown": "2.3.13",
+    "@heroui/form": "2.1.14",
     "@heroui/input": "2.4.13",
     "@heroui/modal": "2.2.11",
     "@heroui/navbar": "2.2.12",
