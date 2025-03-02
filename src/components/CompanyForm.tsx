@@ -1,5 +1,5 @@
 import { Input } from "@heroui/input";
-import { useActionState, useState, useCallback, FormEvent, useEffect } from "react";
+import {useActionState, useState, useCallback, FormEvent, useEffect, ChangeEvent} from "react";
 import { createCompanyAction } from "@/app/actions/company";
 import { Button } from "@heroui/button";
 import { MIN_COMPANY_YEAR } from "@/settings";
@@ -10,13 +10,13 @@ export default function CompanyForm() {
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState('');
   const [yearError, setYearError] = useState('');
+  const [fileError, setFileError] = useState('');
 
   const [formState, action] = useActionState(createCompanyAction, {
     name: "",
     year: "",
     error: ""
   });
-  
 
   const createdYearLabel = `Год создания: от ${MIN_COMPANY_YEAR} до ${new Date().getFullYear()}`;
   const resetErrors = () => {
@@ -48,42 +48,67 @@ export default function CompanyForm() {
 
   const debouncedValidate = useCallback(debounce(validateForm, 500), [validateForm]);
 
-  const onInputCreatedYear = (e: FormEvent<HTMLInputElement>) => {
-    const input = e.target as HTMLInputElement;
-    const digitsOnly = input.value.replace(/\D/g, "");
-    input.value = digitsOnly;
-    setCreatedYear(digitsOnly);
-    debouncedValidate(name, digitsOnly);
+  const onInputCreatedYear = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!isNaN(Number(e.target.value))) {
+      setCreatedYear(e.target.value);
+    }
+    debouncedValidate(name, e.target.value);
   };
 
-  const onInputName = (e: FormEvent<HTMLInputElement>) => {
+  const onInputName = (e: ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value;
     setName(newName);
     debouncedValidate(newName, createdYear);
   };
 
+  const onInputLogo = (e: ChangeEvent<HTMLInputElement>) => {
+    setFileError("")
+    if (!e.target.files){
+      throw new Error("No files")
+    }
+    if (e.target.files.length > 1){
+      throw new Error("Single file input")
+    }
+    const file = e.target.files[0];
+    if (file.size > 1_000_000){
+      setFileError("To big file")
+    }
+  }
+
   const handleCompanyForm = async (formData: FormData) => {
-    if (!validateForm(name, createdYear)) return
+    if (nameError || yearError) return
     await action(formData);
   };
 
   return (
     <form action={handleCompanyForm} className="pb-5 pt-5 relative">
       <span className="text-red-600 absolute -top-2x left-0">{formState.error}</span>
-      <div className="mb-5">
-        <Input 
-          label="Название" 
-          name={"name"} 
-          value={name} 
-          type="text" 
-          onInput={onInputName} 
-          errorMessage={nameError} 
-          isInvalid={!!nameError} 
+        <Input
+          className="mb-5"
+          label="Название"
+          name={"name"}
+          value={name}
+          type="text"
+          onInput={onInputName}
+          errorMessage={nameError}
+          isInvalid={!!nameError}
         />
-      </div>
-      <div className="mb-5">
-        <Input label={createdYearLabel} name={"createdYear"} value={createdYear} onInput={onInputCreatedYear} errorMessage={yearError} isInvalid={!!yearError} />
-      </div>
+        <Input label={createdYearLabel}
+               className="mb-5"
+               name={"createdYear"}
+               value={createdYear}
+               onInput={onInputCreatedYear}
+               errorMessage={yearError}
+               isInvalid={!!yearError}
+        />
+        <Input
+            type="file"
+            label="Logo"
+            name="logo"
+            errorMessage={fileError}
+            isInvalid={!!fileError}
+            onChange={onInputLogo}
+        />
       <Button
         disabled={!!nameError || !!yearError}
         color="primary"

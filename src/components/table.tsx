@@ -21,7 +21,7 @@ import {
 
   import { Pagination } from "@heroui/pagination";
   import {CompanyDto} from "@/app/db/company";
-  
+
   const columns = [
     {
       key: "id",
@@ -92,7 +92,10 @@ import {
                 </div>
 
                 ) : (
-                  getKeyValue(item, columnKey) // Для остальных столбцов отображаем обычные данные
+                    <>
+                    <p>{item.logoPath}</p>
+                    {getKeyValue(item, columnKey)}
+                    </>
                 )}
               </TableCell>
             )}

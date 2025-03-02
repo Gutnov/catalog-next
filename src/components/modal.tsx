@@ -10,11 +10,10 @@ import {
   type Props = {
     isOpen: boolean;
     onOpenChange: (e: boolean) => void;
-    closeModal: () => void,
     children: React.ReactNode
   }
 
-  export default function ModalComponent({isOpen, onOpenChange, closeModal, children}: Props) {
+  export default function ModalComponent({isOpen, onOpenChange, children}: Props) {
     return (
       <>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>

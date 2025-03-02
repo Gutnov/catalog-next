@@ -5,7 +5,7 @@ import {CompanyDto} from "@/app/db/company";
 import {usePathname, useSearchParams, useRouter} from "next/navigation";
 import { useState } from 'react';
 import ModalComponent from "@/components/modal";
-import CompanyForm from "@/components/companyForm";
+import CompanyForm from "@/components/CompanyForm";
 import { Button } from '@heroui/button';
 import { PlusIcon } from '@/components/icons/plusIcon';
 
@@ -44,8 +44,7 @@ export default function CompanyList({companies, totalCount}: Props){
     }
 
     return (<>
-        <ModalComponent isOpen={isOpen} onOpenChange={toggleModal} closeModal={closeModal}
-        >
+        <ModalComponent isOpen={isOpen} onOpenChange={toggleModal}>
             <CompanyForm/>
         </ModalComponent>
         <Button onPress={() => toggleModal(true)} color='secondary' className='mb-5'>
