@@ -7,6 +7,7 @@ export class Company extends Model<InferAttributes<Company>, InferCreationAttrib
   declare id: CreationOptional<number>
   declare name: string
   declare createdYear: number
+  declare logoPath: string
 }
 
 Company.init({
@@ -17,6 +18,9 @@ Company.init({
   },
   name: {
     type: DataTypes.STRING(100)
+  },
+  logoPath: {
+    type: DataTypes.STRING(100),
   },
   createdYear: {
     type: DataTypes.INTEGER,

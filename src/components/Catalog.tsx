@@ -4,10 +4,10 @@ import Table from "@/components/table";
 import {CompanyDto} from "@/app/db/company";
 import {usePathname, useSearchParams, useRouter} from "next/navigation";
 import { useState } from 'react';
-import CompanyModal from "@/components/companyModal";
+import ModalComponent from "@/components/modal";
+import CompanyForm from "@/components/CompanyForm";
 import { Button } from '@heroui/button';
 import { PlusIcon } from '@/components/icons/plusIcon';
-import {createCompanyAction} from "@/app/actions/company";
 
 type Props = {
     companies: CompanyDto[];
@@ -43,18 +43,10 @@ export default function CompanyList({companies, totalCount}: Props){
         router.push(pathname + "?" + searchParams.toString());
     }
 
-    // const createCompany = async (payload:{name: string, createdYear: number}) => {
-    //     try {
-    //         await createCompanyAction(payload)
-    //     } catch (error) {
-    //         alert(error)
-    //     }
-    // }
-
     return (<>
-        <CompanyModal isOpen={isOpen} onOpenChange={toggleModal} closeModal={closeModal}
-                      // onSubmit={createCompany}
-        />
+        <ModalComponent isOpen={isOpen} onOpenChange={toggleModal}>
+            <CompanyForm/>
+        </ModalComponent>
         <Button onPress={() => toggleModal(true)} color='secondary' className='mb-5'>
             Добавить компанию
             <PlusIcon/>
