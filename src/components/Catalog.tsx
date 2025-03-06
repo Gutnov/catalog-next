@@ -16,14 +16,9 @@ type Props = {
 
 export default function CompanyList({companies, totalCount}: Props){
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedCompany, setSelectedCompany] = useState<CompanyDto>();
-  
-    const openCreateModal = () => {
-      setSelectedCompany(null);
-      setIsOpen(true);
-    };
-  
-    const openEditModal = (company: CompanyDto) => {        
+    const [selectedCompany, setSelectedCompany] = useState<CompanyDto|null>();
+
+    const openCompanyForm = (company: CompanyDto | null) => {
       setSelectedCompany(company);
       setIsOpen(true);
     };
@@ -55,10 +50,10 @@ export default function CompanyList({companies, totalCount}: Props){
             <CompanyForm company={selectedCompany} />
         </ModalComponent>
 
-        <Button onPress={() => openCreateModal()} color='secondary' className='mb-5'>
+        <Button onPress={() => openCompanyForm(null)} color='secondary' className='mb-5'>
             Добавить компанию
             <PlusIcon/>
         </Button>
-        <Table openEditModal={openEditModal} list={companies} onChangePage={changePage} totalPages={Math.ceil(totalCount/itemsPerPage)} page={page}/>
+        <Table openEditModal={openCompanyForm} list={companies} onChangePage={changePage} totalPages={Math.ceil(totalCount/itemsPerPage)} page={page}/>
     </>)
 }

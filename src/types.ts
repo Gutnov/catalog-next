@@ -1,7 +1,7 @@
 export type CompanyFormErrors = {
-    name?: string,
-    year?: string,
-    existingNameError?: string,
-    fileError?: string,
-    error?: string
+    nameError?: string,
+    // yearError?: string,
+    // existingNameError?: string,
+    // fileError?: string,
+    // formError?: string
 }

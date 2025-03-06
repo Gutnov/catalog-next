@@ -7,10 +7,7 @@ import {revalidatePath} from "next/cache";
 import {validateFormData} from "@/utils";
 
 import {CompanyFormErrors} from "@/types";
-
-// export const getCompany = (id: number): Promise<CompanyDto> =>{
-//     // todo
-// }
+import {ValidationError} from "@/errors";
 
 export const getCompanies = async (page: number, limit: number): Promise<{companies: CompanyDto[], totalCount: number}> => {
     if (page < 1) throw new Error("Page Not Found");
@@ -25,25 +22,39 @@ export const getCompanies = async (page: number, limit: number): Promise<{compan
     }
 }
 
-
-export const  createCompanyAction = async (
-    formState: CompanyFormErrors,
-    formData: FormData): Promise<CompanyFormErrors> => {
-
-    
-    const companyData = await validateFormData(formData)
-    if ('error' in companyData) {
-       throw new Error('Ощибка при создании компании')
+export const getCompany = async (id: string): Promise<CompanyDto> => {
+    const company= await Company.findByPk(id)
+    if (!company) {
+        throw new ValidationError("Company not found")
     }
-    
-    const newCompany = await Company.create(companyData);
-    revalidatePath('/catalog')
-    redirect(`/catalog/${newCompany.id}`)
+    return company.toJSON()
 }
 
-export const updateCompanyAction = async (
+
+export const  companyFormAction = async (
     formState: CompanyFormErrors,
     formData: FormData): Promise<CompanyFormErrors> => {
-    const companyData = await validateFormData(formData)
-    Company.update(companyData, {where: {id: companyData.id}})
+
+    let companyId
+    try {
+        const companyData = await validateFormData(formData)
+        if (companyData.id) {
+            await Company.update(companyData, {where: {id: companyData.id}})
+            companyId = companyData.id
+        } else {
+            const newCompany  = await Company.create(companyData);
+            companyId = newCompany.id;
+        }
+
+
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            return { nameError: "Компания с таким именем уже существует" }
+        }
+        console.error("Internal error on companyFormAction", error)
+        throw error
+    }
+
+    revalidatePath('/catalog')
+    redirect(`/catalog/${companyId}`)
 }

@@ -21,6 +21,7 @@ Company.init({
   },
   logoPath: {
     type: DataTypes.STRING(100),
+    defaultValue: ''
   },
   createdYear: {
     type: DataTypes.INTEGER,
