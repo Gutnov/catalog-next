@@ -3,7 +3,7 @@ import sequelize from '@/app/db/db'
 
 export type CompanyDto = InferAttributes<Company>
 
-export class Company extends Model<InferAttributes<Company>, InferCreationAttributes<Company>> {
+export class Company extends Model<CompanyDto, InferCreationAttributes<Company>> {
   declare id: CreationOptional<number>
   declare name: string
   declare createdYear: number

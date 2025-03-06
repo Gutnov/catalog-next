@@ -1,22 +1,30 @@
 import { Input } from "@heroui/input";
 import {useActionState, useState, useCallback, FormEvent, useEffect, ChangeEvent} from "react";
-import { createCompanyAction } from "@/app/actions/company";
+import { createCompanyAction, updateCompanyAction } from "@/app/actions/company";
 import { Button } from "@heroui/button";
 import { MIN_COMPANY_YEAR } from "@/settings";
 import { debounce } from "@/helper";
+import { CompanyDto } from "@/app/db/company";
+type Props = {
+  company?: CompanyDto
+};
 
-export default function CompanyForm() {
+export default function CompanyForm({ company }: Props) {
   const [createdYear, setCreatedYear] = useState("");
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState('');
   const [yearError, setYearError] = useState('');
   const [fileError, setFileError] = useState('');
 
-  const [formState, action] = useActionState(createCompanyAction, {
-    name: "",
-    year: "",
-    error: ""
-  });
+  const [formState, action] = useActionState(
+    company ? updateCompanyAction : createCompanyAction,
+    {
+      id: company?.id || "",
+      name: company?.name || "",
+      year: company?.createdYear || "",
+      error: ""
+    }
+  );
 
   const createdYearLabel = `Год создания: от ${MIN_COMPANY_YEAR} до ${new Date().getFullYear()}`;
   const resetErrors = () => {
@@ -87,7 +95,7 @@ export default function CompanyForm() {
           className="mb-5"
           label="Название"
           name={"name"}
-          value={name}
+          value={formState.name}
           type="text"
           onInput={onInputName}
           errorMessage={nameError}
@@ -96,7 +104,7 @@ export default function CompanyForm() {
         <Input label={createdYearLabel}
                className="mb-5"
                name={"createdYear"}
-               value={createdYear}
+               value={formState.createdYear}
                onInput={onInputCreatedYear}
                errorMessage={yearError}
                isInvalid={!!yearError}

@@ -10,17 +10,18 @@ import {
   type Props = {
     isOpen: boolean;
     onOpenChange: (e: boolean) => void;
-    children: React.ReactNode
+    children: React.ReactNode,
+    title: string
   }
 
-  export default function ModalComponent({isOpen, onOpenChange, children}: Props) {
+  export default function ModalComponent({isOpen, onOpenChange, title, children}: Props) {
     return (
       <>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
           <ModalContent>
             {() => (
-                <>
-                <ModalHeader className="flex flex-col gap-1 text-black">Создание компании</ModalHeader>
+              <>
+                <ModalHeader className="flex flex-col gap-1 text-black">{title}</ModalHeader>
                 <ModalBody>
                   {children}
                 </ModalBody>
