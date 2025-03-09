@@ -36,6 +36,10 @@ import {
       label: "CREATED YEAR",
     },
     {
+      key: "logoPath",
+      label: "LOGO",
+    },
+    {
       key: "action",
       label: "",
     },
@@ -45,10 +49,11 @@ import {
     list: CompanyDto[],
     onChangePage: (page: number) => void,
     totalPages: number,
-    page: number
+    page: number,
+    openEditModal: (company: CompanyDto) => void
   }
 
-  export default function TableComponent({list, onChangePage, totalPages, page}: Props) {
+  export default function TableComponent({list, onChangePage, totalPages, page, openEditModal}: Props) {
     return (<>
       <Table aria-label="Example table with dynamic content"
       bottomContent={
@@ -85,7 +90,7 @@ import {
                       <DropdownItem key="view" className='text-black' href={`/catalog/${item.id}`}>
                         View
                       </DropdownItem>
-                      <DropdownItem key="edit">Edit</DropdownItem>
+                      <DropdownItem onPress={() => openEditModal(item)} key="edit">Edit</DropdownItem>
                       <DropdownItem key="delete">Delete</DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
@@ -93,7 +98,6 @@ import {
 
                 ) : (
                     <>
-                    <p>{item.logoPath}</p>
                     {getKeyValue(item, columnKey)}
                     </>
                 )}

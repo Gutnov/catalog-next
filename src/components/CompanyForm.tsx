@@ -1,22 +1,33 @@
 import { Input } from "@heroui/input";
-import {useActionState, useState, useCallback, FormEvent, useEffect, ChangeEvent} from "react";
-import { createCompanyAction } from "@/app/actions/company";
+import {useActionState, useState, useCallback, useEffect, ChangeEvent} from "react";
+import { companyFormAction } from "@/app/actions/company";
 import { Button } from "@heroui/button";
 import { MIN_COMPANY_YEAR } from "@/settings";
 import { debounce } from "@/helper";
+import { CompanyDto } from "@/app/db/company";
+type Props = {
+  // todo: remove undefined
+  company?: CompanyDto | null
+};
 
-export default function CompanyForm() {
-  const [createdYear, setCreatedYear] = useState("");
-  const [name, setName] = useState("");
+export default function CompanyForm({ company }: Props) {
+  const [createdYear, setCreatedYear] = useState<string>(company?.createdYear ? String(company?.createdYear) : "");
+  const [name, setName] = useState(company?.name ?? "");
   const [nameError, setNameError] = useState('');
   const [yearError, setYearError] = useState('');
   const [fileError, setFileError] = useState('');
 
-  const [formState, action] = useActionState(createCompanyAction, {
-    name: "",
-    year: "",
-    error: ""
-  });
+  const [formState, action, isPending] = useActionState(companyFormAction,
+    {
+      nameError: "",
+    }
+  );
+
+  useEffect(() => {
+    if (formState.nameError){
+      setNameError(formState.nameError);
+    }
+  }, [formState]);
 
   const createdYearLabel = `Год создания: от ${MIN_COMPANY_YEAR} до ${new Date().getFullYear()}`;
   const resetErrors = () => {
@@ -70,7 +81,8 @@ export default function CompanyForm() {
       throw new Error("Single file input")
     }
     const file = e.target.files[0];
-    if (file.size > 1_000_000){
+    console.log('file', file)
+    if (file.size > 10_000_000){
       setFileError("To big file")
     }
   }
@@ -82,7 +94,7 @@ export default function CompanyForm() {
 
   return (
     <form action={handleCompanyForm} className="pb-5 pt-5 relative">
-      <span className="text-red-600 absolute -top-2x left-0">{formState.error}</span>
+        <input hidden name="id" value={company?.id ? String(company?.id) :  ""} readOnly/>
         <Input
           className="mb-5"
           label="Название"
@@ -96,6 +108,7 @@ export default function CompanyForm() {
         <Input label={createdYearLabel}
                className="mb-5"
                name={"createdYear"}
+               type="text"
                value={createdYear}
                onInput={onInputCreatedYear}
                errorMessage={yearError}
@@ -110,7 +123,7 @@ export default function CompanyForm() {
             onChange={onInputLogo}
         />
       <Button
-        disabled={!!nameError || !!yearError}
+        disabled={!!nameError || !!yearError || isPending}
         color="primary"
         type="submit"
         className="px-10 block mx-auto max-w-full w-full disabled:opacity-50 disabled:hover:opacity-50 disabled:hover:pointer-events-none disabled:cursor-not-allowed cursor-pointer"

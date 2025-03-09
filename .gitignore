@@ -40,3 +40,6 @@ Thumbs.db
 # IDEs
 .idea/
 mysql-data
+
+# Data
+/public/logos
