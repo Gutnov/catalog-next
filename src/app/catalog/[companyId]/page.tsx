@@ -1,15 +1,13 @@
 "use server"
-
 import {getCompany} from "@/app/actions/company";
-
-export default async function CompanyPage({ params }) {
+import Company from '@/components/Company'
+export default async function CompanyPage({ params }: { params: { companyId: string } }) {
     const {companyId} = await params
     const company = await getCompany(companyId)
+
     return (
         <div>
-            <h1 className='text-xl font-bold'>Company id:  {companyId}</h1>
-            <img src={`${company.logoPath}`} alt=""/>
-            <p> Name: {company.name}</p>
+            <Company company={company}/>
         </div>
     )
 }
