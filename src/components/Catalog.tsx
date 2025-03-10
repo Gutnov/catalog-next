@@ -1,7 +1,7 @@
 "use client"
 
 import TableComponent from "@/components/TableComponent";
-import {CompanyDto} from "@/app/db/company";
+import {CompanyDto} from "@/db/company";
 import {usePathname, useSearchParams, useRouter} from "next/navigation";
 import { useState } from 'react';
 import ModalComponent from "@/components/ModalComponent";

@@ -1,5 +1,5 @@
 import {Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional} from 'sequelize'
-import sequelize from '@/app/db/db'
+import sequelize from '@/db/db'
 export type ProductDto = InferAttributes<Product>
 export class Product extends Model<ProductDto, InferCreationAttributes<Product>> {
   declare id: CreationOptional<number>

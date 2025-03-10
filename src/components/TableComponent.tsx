@@ -20,7 +20,7 @@ import {
   import { VerticalDotsIcon } from '@/components/icons/verticalDotsIcon';
 
   import { Pagination } from "@heroui/pagination";
-  import {CompanyDto} from "@/app/db/company";
+  import {CompanyDto} from "@/db/company";
 
   const columns = [
     {

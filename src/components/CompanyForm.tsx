@@ -1,10 +1,10 @@
 import { Input } from "@heroui/input";
 import {useActionState, useState, useCallback, useEffect, ChangeEvent} from "react";
-import { companyFormAction } from "@/app/actions/company/company";
+import { companyFormAction } from "@/actions/company/company";
 import { Button } from "@heroui/button";
 import { MIN_COMPANY_YEAR } from "@/settings";
 import { debounce } from "@/helper";
-import { CompanyDto } from "@/app/db/company";
+import { CompanyDto } from "@/db/company";
 type Props = {
   // todo: remove undefined
   company?: CompanyDto | null

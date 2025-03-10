@@ -1,4 +1,4 @@
-import { getProductsByCompanyId } from '@/app/actions/product';
+import { getProductsByCompanyId } from '@/actions/product';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

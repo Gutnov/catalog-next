@@ -1,7 +1,7 @@
 "use server"
 
 import CompanyList from "@/components/Catalog";
-import {getCompaniesAction} from "@/app/actions/company/company";
+import {getCompaniesAction} from "@/actions/company/company";
 
 type Props = {
     searchParams: Promise<{page?: string, itemsPerPage?: string}>

@@ -1,7 +1,7 @@
 import { Model, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes } from 'sequelize'
-import sequelize from '@/app/db/db'
-import { Company } from '@/app/db/company'
-import { Product } from '@/app/db/product'
+import sequelize from '@/db/db'
+import { Company } from '@/db/company'
+import { Product } from '@/db/product'
 
 export class ProductCompany extends Model<InferAttributes<ProductCompany>, InferCreationAttributes<ProductCompany>> {
   declare productId: ForeignKey<Product['id']>

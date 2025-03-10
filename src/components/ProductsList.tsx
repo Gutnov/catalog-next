@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import {getProductsByCompanyId} from "@/app/actions/product";
+import {getProductsByCompanyId} from "@/actions/product";
 
 interface Product {
   id: number;

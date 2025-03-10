@@ -1,4 +1,4 @@
-import {Company, CompanyDto} from "@/app/db/company";
+import {Company, CompanyDto} from "@/db/company";
 import {InternalError, ValidationError} from "@/errors";
 import {saveFile} from "@/utils";
 

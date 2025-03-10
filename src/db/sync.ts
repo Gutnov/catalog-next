@@ -1,7 +1,7 @@
-import { Company } from '@/app/db/company'
-import { Product } from '@/app/db/product'
-import { ProductCompany } from '@/app/db/product-company'
-import sequelize from '@/app/db/db'
+import { Company } from '@/db/company'
+import { Product } from '@/db/product'
+import { ProductCompany } from '@/db/product-company'
+import sequelize from '@/db/db'
 
 const runDbSync = async () => {
   const registeredModels = [Company, Product, ProductCompany]

@@ -1,13 +1,13 @@
 "use client"
 
-import {CompanyDto} from "@/app/db/company";
+import {CompanyDto} from "@/db/company";
 import ProductList from '@/components/ProductsList';
 import { Button } from '@heroui/button';
 import { PlusIcon } from '@/components/icons/plusIcon';
 import ModalComponent from "@/components/ModalComponent";
 import ProductForm from '@/components/ProductForm';
 import { useState } from 'react';
-import { ProductDto } from '@/app/db/product';
+import { ProductDto } from '@/db/product';
 
 export default function Company({ company, products }: { company: CompanyDto, products: ProductDto[] }) {
     const [isOpen, setIsOpen] = useState(false);

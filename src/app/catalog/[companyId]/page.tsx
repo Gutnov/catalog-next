@@ -1,8 +1,8 @@
 "use server"
 
-import {getCompanyAction} from "@/app/actions/company/company";
+import {getCompanyAction} from "@/actions/company/company";
 import Company from '@/components/Company'
-import {getProductsByCompanyId} from "@/app/actions/product";
+import {getProductsByCompanyId} from "@/actions/product";
 
 export default async function CompanyPage({ params }: { params: { companyId: string } }) {
     const {companyId} = await params

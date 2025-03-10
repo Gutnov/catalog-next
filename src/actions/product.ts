@@ -1,8 +1,8 @@
 'use server'
 
-import { Product } from "@/app/db/product";
-import { Company } from "@/app/db/company";
-import { ProductCompany } from "@/app/db/product-company";
+import { Product } from "@/db/product";
+import { Company } from "@/db/company";
+import { ProductCompany } from "@/db/product-company";
 export async function getProductsByCompanyId(companyId: number, page: number = 1, limit: number = 20) {
     const offset = (page - 1) * limit;
 

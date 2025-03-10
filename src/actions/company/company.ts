@@ -1,13 +1,13 @@
 'use server'
 
-import {Company, CompanyDto} from "@/app/db/company";
+import {Company, CompanyDto} from "@/db/company";
 
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 
 import {CompanyFormErrors} from "@/types";
 import {ValidationError} from "@/errors";
-import {cleanCompanyFormData} from "@/app/actions/company/form-cleaners";
+import {cleanCompanyFormData} from "@/actions/company/form-cleaners";
 
 export const getCompaniesAction = async (page: number, limit: number): Promise<{companies: CompanyDto[], totalCount: number}> => {
     if (page < 1) throw new Error("Page Not Found");
