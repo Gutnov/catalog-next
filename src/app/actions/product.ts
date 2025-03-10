@@ -1,3 +1,5 @@
+'use server'
+
 import { Product } from "@/app/db/product";
 import { Company } from "@/app/db/company";
 import { ProductCompany } from "@/app/db/product-company";
@@ -24,7 +26,7 @@ export async function getProductsByCompanyId(companyId: number, page: number = 1
 
 export const createOrUpdateProduct = async (productData: { name: string }, companyId: number) => {
   const product = await Product.create({ name: productData.name })
-  
+
   await ProductCompany.create({
     productId: product.id,
     companyId: companyId

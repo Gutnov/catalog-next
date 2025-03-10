@@ -9,7 +9,7 @@ import ProductForm from '@/components/ProductForm';
 import { useState } from 'react';
 import { ProductDto } from '@/app/db/product';
 
-export default function Company({ company }: { company: CompanyDto }) {
+export default function Company({ company, products }: { company: CompanyDto, products: ProductDto[] }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<ProductDto|null>();
 
@@ -31,7 +31,7 @@ export default function Company({ company }: { company: CompanyDto }) {
                 </Button>
             </div>
             <img src={`${company.logoPath}`} alt=""/>
-            <ProductList companyId={Number(company.id)}/>
+            <ProductList companyId={Number(company.id)} initialProducts={products}/>
         </div>
     )
 }

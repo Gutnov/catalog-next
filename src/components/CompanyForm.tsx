@@ -1,6 +1,6 @@
 import { Input } from "@heroui/input";
 import {useActionState, useState, useCallback, useEffect, ChangeEvent} from "react";
-import { companyFormAction } from "@/app/actions/company";
+import { companyFormAction } from "@/app/actions/company/company";
 import { Button } from "@heroui/button";
 import { MIN_COMPANY_YEAR } from "@/settings";
 import { debounce } from "@/helper";
@@ -18,7 +18,7 @@ export default function CompanyForm({ company }: Props) {
   const [fileError, setFileError] = useState('');
   const [isNameTouched, setIsNameTouched] = useState(false);
   const [isYearTouched, setIsYearTouched] = useState(false);
-  
+
 
   const [formState, action, isPending] = useActionState(companyFormAction,
     {

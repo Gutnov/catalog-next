@@ -4,12 +4,12 @@ import {Company, CompanyDto} from "@/app/db/company";
 
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
-import {validateFormData} from "@/utils";
 
 import {CompanyFormErrors} from "@/types";
 import {ValidationError} from "@/errors";
+import {cleanCompanyFormData} from "@/app/actions/company/form-cleaners";
 
-export const getCompanies = async (page: number, limit: number): Promise<{companies: CompanyDto[], totalCount: number}> => {
+export const getCompaniesAction = async (page: number, limit: number): Promise<{companies: CompanyDto[], totalCount: number}> => {
     if (page < 1) throw new Error("Page Not Found");
     const {rows, count} =  await Company.findAndCountAll({
         limit,
@@ -22,7 +22,7 @@ export const getCompanies = async (page: number, limit: number): Promise<{compan
     }
 }
 
-export const getCompany = async (id: string): Promise<CompanyDto> => {
+export const getCompanyAction = async (id: string): Promise<CompanyDto> => {
     const company= await Company.findByPk(id)
     if (!company) {
         throw new ValidationError("Company not found")
@@ -37,7 +37,7 @@ export const  companyFormAction = async (
 
     let companyId
     try {
-        const companyData = await validateFormData(formData)
+        const companyData = await cleanCompanyFormData(formData)
         if (companyData.id) {
             await Company.update(companyData, {where: {id: companyData.id}})
             companyId = companyData.id

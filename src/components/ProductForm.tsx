@@ -3,6 +3,7 @@
 import { Input } from "@heroui/input";
 import { useState, ChangeEvent } from "react";
 import { Button } from "@heroui/button";
+// import {createOrUpdateProduct} from "@/app/actions/product";
 
 type Props = {
     companyId: number;
@@ -21,7 +22,8 @@ export default function ProductForm({ companyId, product }: Props) {
         }
         setError("");
 
-        await createOrUpdateProduct({ id: product?.id, name, companyId });
+        alert("Not implemented")
+        // await createOrUpdateProduct({ id: product?.id, name, companyId });
         setName("");
     };
 

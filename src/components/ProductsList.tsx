@@ -1,7 +1,7 @@
-// components/ProductList.tsx
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import {getProductsByCompanyId} from "@/app/actions/product";
 
 interface Product {
   id: number;
@@ -10,25 +10,25 @@ interface Product {
 
 interface ProductListProps {
   companyId: number;
+  initialProducts: Product[];
 }
 
-export default function ProductList ({ companyId }: ProductListProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [page, setPage] = useState(1);
+export default function ProductList ({ companyId, initialProducts }: ProductListProps) {
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [page, setPage] = useState(2);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const lastProductRef = useRef<HTMLDivElement | null>(null);
 
   const loadProducts = async () => {
     if (!hasMore || isLoading) return;
-    
+
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/products?companyId=${companyId}&page=${page}`);
-      const data = await response.json();
-      
+      const data = await getProductsByCompanyId(companyId, page)
+
       setProducts(prev => [...prev, ...data.products]);
       setHasMore(data.hasMore);
       setPage(prev => prev + 1);
@@ -39,12 +39,6 @@ export default function ProductList ({ companyId }: ProductListProps) {
     }
   };
 
-  useEffect(() => {
-    if (companyId) {
-      loadProducts();
-    }
-  }, [companyId]);
-
   // Наблюдатель за последним элементом
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -53,7 +47,7 @@ export default function ProductList ({ companyId }: ProductListProps) {
           loadProducts();
         }
       },
-      { 
+      {
         root: containerRef.current,
         rootMargin: '0px 0px 200px 0px',
         threshold: 0
@@ -66,7 +60,7 @@ export default function ProductList ({ companyId }: ProductListProps) {
   }, [hasMore, page, isLoading]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="h-[600px] overflow-y-auto border border-gray-200 rounded-lg p-4"
     >
@@ -77,7 +71,7 @@ export default function ProductList ({ companyId }: ProductListProps) {
             ref={index === products.length - 1 ? lastProductRef : null}
             className="p-4 bg-white rounded-lg shadow-sm border border-gray-100"
           >
-            <p className="text-gray-800 font-medium">{product.name}</p>
+            <p className="text-gray-800 font-medium">{index}: {product.name}</p>
           </div>
         ))}
         {isLoading && (
