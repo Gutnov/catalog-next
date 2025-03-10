@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync": "npx tsx src/app/db/sync.ts"
+    "sync": "npx tsx src/db/sync.ts"
   },
   "dependencies": {
     "@heroui/button": "2.2.13",

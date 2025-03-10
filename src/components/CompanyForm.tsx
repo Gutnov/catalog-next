@@ -1,10 +1,10 @@
 import { Input } from "@heroui/input";
 import {useActionState, useState, useCallback, useEffect, ChangeEvent} from "react";
-import { companyFormAction } from "@/app/actions/company";
+import { companyFormAction } from "@/actions/company/company";
 import { Button } from "@heroui/button";
 import { MIN_COMPANY_YEAR } from "@/settings";
 import { debounce } from "@/helper";
-import { CompanyDto } from "@/app/db/company";
+import { CompanyDto } from "@/db/company";
 type Props = {
   // todo: remove undefined
   company?: CompanyDto | null
@@ -16,6 +16,9 @@ export default function CompanyForm({ company }: Props) {
   const [nameError, setNameError] = useState('');
   const [yearError, setYearError] = useState('');
   const [fileError, setFileError] = useState('');
+  const [isNameTouched, setIsNameTouched] = useState(false);
+  const [isYearTouched, setIsYearTouched] = useState(false);
+
 
   const [formState, action, isPending] = useActionState(companyFormAction,
     {
@@ -38,24 +41,24 @@ export default function CompanyForm({ company }: Props) {
     resetErrors()
     let isValid = true;
     const currentYear = new Date().getFullYear();
-    if (!nameValue || nameValue.length < 5) {
+    if (isNameTouched && (!nameValue || nameValue.length < 5)) {
       setNameError('Название компании должно быть не менее 5 символов')
       isValid = false
     }
-    if (!yearValue) {
+    if (isYearTouched && !yearValue) {
       setYearError('Год создания не может быть пустым');
       isValid = false
     }
-    if (Number(yearValue) < MIN_COMPANY_YEAR) {
+    if (isYearTouched && Number(yearValue) < MIN_COMPANY_YEAR) {
       setYearError(`Год создания не может быть меньше ${MIN_COMPANY_YEAR}`);
       isValid = false
     }
-    if (Number(yearValue) > currentYear) {
+    if (isYearTouched && Number(yearValue) > currentYear) {
       setYearError(`Год создания не может быть больше ${currentYear}`);
       isValid = false
     }
     return isValid
-  }, []);
+  }, [isNameTouched, isYearTouched]);
 
   const debouncedValidate = useCallback(debounce(validateForm, 500), [validateForm]);
 
@@ -67,6 +70,7 @@ export default function CompanyForm({ company }: Props) {
   };
 
   const onInputName = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!isNameTouched) setIsNameTouched(true);
     const newName = e.target.value;
     setName(newName);
     debouncedValidate(newName, createdYear);
@@ -88,6 +92,8 @@ export default function CompanyForm({ company }: Props) {
   }
 
   const handleCompanyForm = async (formData: FormData) => {
+    setIsNameTouched(true);
+    setIsYearTouched(true);
     if (nameError || yearError) return
     await action(formData);
   };
