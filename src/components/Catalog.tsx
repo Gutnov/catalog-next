@@ -1,10 +1,10 @@
 "use client"
 
-import Table from "@/components/table";
-import {CompanyDto} from "@/app/db/company";
+import TableComponent from "@/components/TableComponent";
+import {CompanyDto} from "@/db/company";
 import {usePathname, useSearchParams, useRouter} from "next/navigation";
 import { useState } from 'react';
-import ModalComponent from "@/components/modal";
+import ModalComponent from "@/components/ModalComponent";
 import CompanyForm from "@/components/CompanyForm";
 import { Button } from '@heroui/button';
 import { PlusIcon } from '@/components/icons/plusIcon';
@@ -46,7 +46,7 @@ export default function CompanyList({companies, totalCount}: Props){
     }
 
     return (<>
-       <ModalComponent isOpen={isOpen} onOpenChange={setIsOpen} title={selectedCompany ? 'Редактирование компании' : 'Добавление компании'}>
+        <ModalComponent isOpen={isOpen} onOpenChange={setIsOpen} title={selectedCompany ? 'Редактирование компании' : 'Добавление компании'}>
             <CompanyForm company={selectedCompany} />
         </ModalComponent>
 
@@ -54,6 +54,6 @@ export default function CompanyList({companies, totalCount}: Props){
             Добавить компанию
             <PlusIcon/>
         </Button>
-        <Table openEditModal={openCompanyForm} list={companies} onChangePage={changePage} totalPages={Math.ceil(totalCount/itemsPerPage)} page={page}/>
+        <TableComponent openEditModal={openCompanyForm} list={companies} onChangePage={changePage} totalPages={Math.ceil(totalCount/itemsPerPage)} page={page}/>
     </>)
 }
