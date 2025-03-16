@@ -17,7 +17,7 @@ import {
   export default function ModalComponent({isOpen, onOpenChange, title, children}: Props) {
     return (
       <>
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
           <ModalContent>
             {() => (
               <>
