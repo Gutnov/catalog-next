@@ -6,6 +6,7 @@ import { Button } from "@heroui/button";
 import {ProductDto} from "@/db/product";
 import {createProductAction, getProductsAction, linkProductAction} from "@/actions/product";
 import { debounce } from "@/helper";
+import { useRouter } from 'next/navigation';
 
 type Props = {
     companyId: number;
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export default function ProductForm({ companyId, product, successHandler }: Props) {
+    const router = useRouter();
+
     const [autocompleteQuery, setAutocompleteQuery] = useState(product?.name ?? "");
     const [error, setError] = useState("");
     const [autocompleteOptions, setAutocompleteOptions] = useState<ProductDto[]>([]);
@@ -46,7 +49,8 @@ export default function ProductForm({ companyId, product, successHandler }: Prop
         } else {
             await createProductAction({ name: autocompleteQuery }, companyId);
         }
-
+        // window.location.reload()
+        router.refresh()
         setAutocompleteQuery('')
         setSelectedProduct(null)
         successHandler()
@@ -59,7 +63,7 @@ export default function ProductForm({ companyId, product, successHandler }: Prop
         //     return;
         // }
         const products = await getProductsAction(query.trim());
-        console.log('products', products);
+        // console.log('products', products);
         // if (products && products.length) {
         setAutocompleteOptions(products);
         // }

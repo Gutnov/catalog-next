@@ -15,13 +15,17 @@ interface ProductListProps {
 }
 
 export default function ProductList ({ companyId, initialProducts, initialHasMore }: ProductListProps) {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(2);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [isLoading, setIsLoading] = useState(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const lastProductRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setProducts(initialProducts);
+  }, [initialProducts]);
 
   const loadProducts = async () => {
     if (!hasMore || isLoading) return;

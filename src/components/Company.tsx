@@ -9,8 +9,8 @@ import ProductForm from '@/components/ProductForm';
 import { useState } from 'react';
 import { ProductDto } from '@/db/product';
 
-export default function Company({ company, products, initialHasMore }: { company: CompanyDto, products: ProductDto[], initialHasMore:boolean}) {
-    const [isOpen, setIsOpen] = useState(false);
+export default function Company({ company, products, initialHasMore, initialIsOpen }: { company: CompanyDto, products: ProductDto[], initialHasMore:boolean, initialIsOpen:boolean }) {
+    const [isOpen, setIsOpen] = useState(initialIsOpen);
     const [selectedProduct, setSelectedProduct] = useState<ProductDto|null>();
 
     const openProductForm = (product: ProductDto | null) => {
