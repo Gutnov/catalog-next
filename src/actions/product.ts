@@ -38,8 +38,9 @@ export async function getProductsAction(search: string = "") {
   }
   const result = await Product.findAll({
       where,
+      limit: 20
   });
-
+  console.log('get products action', result)
   return result.map(product => ({ name: product.name, id: product.id }))
 }
 
@@ -56,7 +57,7 @@ export const createProductAction = async (productData: { name: string }, company
 
 export const linkProductAction = async (productId: number, companyId: number) => {
   console.log(productId, companyId);
-  
+
   await ProductCompany.create({
     productId: productId,
     companyId: companyId

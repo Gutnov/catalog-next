@@ -14,9 +14,9 @@ type Props = {
 };
 
 export default function ProductForm({ companyId, product, successHandler }: Props) {
-    const [name, setName] = useState(product?.name ?? "");
+    const [autocompleteQuery, setAutocompleteQuery] = useState(product?.name ?? "");
     const [error, setError] = useState("");
-    const [fetchedProducts, setFetchedProducts] = useState<ProductDto[]>([]);
+    const [autocompleteOptions, setAutocompleteOptions] = useState<ProductDto[]>([]);
     const [selectedProduct, setSelectedProduct] = useState<ProductDto | null>(null);
 
     const mapProducts = (products: ProductDto[]) => {
@@ -24,51 +24,56 @@ export default function ProductForm({ companyId, product, successHandler }: Prop
     }
 
     useEffect(() => {
-        if (selectedProduct && name !== selectedProduct?.name) {
+        if (selectedProduct && autocompleteQuery !== selectedProduct?.name) {
             setSelectedProduct(null)
         }
-    }, [name]);
+    }, [autocompleteQuery]);
 
-    const handleSubmit = async (e: React.FormEvent) => {        
+    useEffect(() => {
+        debouncedOnInputHandler(autocompleteQuery)
+    }, []);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!name.trim()) {
+        if (!autocompleteQuery.trim()) {
             setError("Название товара не может быть пустым");
             return;
         }
         setError("");
 
-        if (selectedProduct) {            
-           await linkProductAction(selectedProduct.id, companyId)
-           setName('')
-           setSelectedProduct(null)
-           successHandler()
-           return
+        if (selectedProduct) {
+            await linkProductAction(selectedProduct.id, companyId)
+        } else {
+            await createProductAction({ name: autocompleteQuery }, companyId);
         }
-        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-        
-        await createProductAction({ name }, companyId);
-        setName('');
+
+        setAutocompleteQuery('')
+        setSelectedProduct(null)
+        successHandler()
     };
 
-    const onInputHandler = useCallback(async (value: string) => {        
-        setName(value);
-        if (!value.trim()) {
-            setFetchedProducts([]);
-            return;
-        }
-        const products = await getProductsAction(value);
-        if (products && products.length) {
-            setFetchedProducts(products);
-        }
+    const onInputHandler = useCallback(async (query: string) => {
+        setAutocompleteQuery(query);
+        // if (!value.trim()) {
+        //     setFetchedProducts([]);
+        //     return;
+        // }
+        const products = await getProductsAction(query.trim());
+        console.log('products', products);
+        // if (products && products.length) {
+        setAutocompleteOptions(products);
+        // }
     }, []);
     const debouncedOnInputHandler = debounce(onInputHandler, 1000);
     const selectHandler = (key) => {
+        // todo: use not index, but ID.
+        console.log('key', key)
         const index = Number(key) - 1;
-        const currentProduct = fetchedProducts[index];
+        const currentProduct = autocompleteOptions[index];
         if (currentProduct && currentProduct.id) {
             setSelectedProduct(currentProduct);
-            setName(currentProduct.name);
-        }        
+            setAutocompleteQuery(currentProduct.name);
+        }
     }
 
     return (
@@ -77,7 +82,7 @@ export default function ProductForm({ companyId, product, successHandler }: Prop
             <Autocomplete
                 allowsCustomValue
                 className=" text-black mb-5"
-                defaultItems={mapProducts(fetchedProducts)}
+                defaultItems={mapProducts(autocompleteOptions)}
                 label="Название товара"
                 variant="flat"
                 onInputChange={debouncedOnInputHandler}
@@ -86,7 +91,7 @@ export default function ProductForm({ companyId, product, successHandler }: Prop
                 {(item) => <AutocompleteItem key={item.key} className='text-black'>{item.label}</AutocompleteItem>}
             </Autocomplete>
             <Button
-                disabled={!name.trim()}
+                disabled={!autocompleteQuery.trim()}
                 color="primary"
                 type="submit"
                 className="px-10 block mx-auto max-w-full w-full disabled:opacity-50"
