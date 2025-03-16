@@ -11,12 +11,13 @@ interface Product {
 interface ProductListProps {
   companyId: number;
   initialProducts: Product[];
+  initialHasMore: boolean;
 }
 
-export default function ProductList ({ companyId, initialProducts }: ProductListProps) {
+export default function ProductList ({ companyId, initialProducts, initialHasMore }: ProductListProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [page, setPage] = useState(2);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(initialHasMore);
   const [isLoading, setIsLoading] = useState(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -71,7 +72,7 @@ export default function ProductList ({ companyId, initialProducts }: ProductList
             ref={index === products.length - 1 ? lastProductRef : null}
             className="p-4 bg-white rounded-lg shadow-sm border border-gray-100"
           >
-            <p className="text-gray-800 font-medium">{index}: {product.name}</p>
+            <p className="text-gray-800 font-medium">idx: {index}: id: {product.id}. {product.name}</p>
           </div>
         ))}
         {isLoading && (

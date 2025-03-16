@@ -6,6 +6,7 @@ import { Product } from '@/db/product'
 export class ProductCompany extends Model<InferAttributes<ProductCompany>, InferCreationAttributes<ProductCompany>> {
   declare productId: ForeignKey<Product['id']>
   declare companyId: ForeignKey<Company['id']>
+    declare product?: Product
 }
 
 ProductCompany.init({
@@ -16,7 +17,7 @@ ProductCompany.init({
       key: 'id'
     },
     onDelete: 'CASCADE',
-    primaryKey: true
+    // primaryKey: true
   },
   companyId: {
     type: DataTypes.INTEGER,
@@ -25,12 +26,17 @@ ProductCompany.init({
       key: 'id'
     },
     onDelete: 'CASCADE',
-    primaryKey: true
+    // primaryKey: true
   }
 }, {
   sequelize,
   tableName: 'product_companies',
-  timestamps: false
+  timestamps: false,
+  indexes: [{
+      name: "product_company_unique",
+      fields: ["productId", "companyId"],
+      unique: true
+  }]
 })
 
 Company.belongsToMany(Product, {
@@ -43,4 +49,9 @@ Product.belongsToMany(Company, {
     through: ProductCompany,
     foreignKey: 'productId',
     otherKey: 'companyId'
+})
+
+ProductCompany.hasOne(Product, {
+    as: "product",
+    foreignKey: 'id',
 })
