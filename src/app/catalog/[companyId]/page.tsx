@@ -12,7 +12,7 @@ export default async function CompanyPage({ params }: { params: { companyId: str
 
     return (
         <div>
-            <Company company={company} products={companyProducts.products} />
+            <Company company={company} products={companyProducts.products} initialHasMore={companyProducts.hasMore}/>
         </div>
     )
 }

@@ -10,6 +10,7 @@
     "sync": "npx tsx src/db/sync.ts"
   },
   "dependencies": {
+    "@heroui/autocomplete": "^2.3.17",
     "@heroui/button": "2.2.13",
     "@heroui/dropdown": "2.3.13",
     "@heroui/form": "2.1.14",

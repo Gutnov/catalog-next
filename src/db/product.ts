@@ -13,7 +13,8 @@ Product.init({
     autoIncrement: true
   },
   name: {
-    type: DataTypes.STRING(100)
+    type: DataTypes.STRING(100),
+    unique: true,
   }
 }, {
   sequelize,

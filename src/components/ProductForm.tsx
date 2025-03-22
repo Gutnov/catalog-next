@@ -1,52 +1,108 @@
 "use client"
 
-import { Input } from "@heroui/input";
-import { useState, ChangeEvent } from "react";
+import {Autocomplete, AutocompleteItem} from "@heroui/autocomplete";
+import { useState, ChangeEvent, useCallback, useEffect } from "react";
 import { Button } from "@heroui/button";
-// import {createOrUpdateProduct} from "@/app/actions/product";
+import {ProductDto} from "@/db/product";
+import {createProductAction, getProductsAction, linkProductAction} from "@/actions/product";
+import { debounce } from "@/helper";
+import { useRouter } from 'next/navigation';
 
 type Props = {
     companyId: number;
     product?: { id?: number; name: string } | null;
+    successHandler: () => void;
 };
 
-export default function ProductForm({ companyId, product }: Props) {
-    const [name, setName] = useState(product?.name ?? "");
+export default function ProductForm({ companyId, product, successHandler }: Props) {
+    const router = useRouter();
+
+    const [autocompleteQuery, setAutocompleteQuery] = useState(product?.name ?? "");
     const [error, setError] = useState("");
+    const [autocompleteOptions, setAutocompleteOptions] = useState<ProductDto[]>([]);
+    const [selectedProduct, setSelectedProduct] = useState<ProductDto | null>(null);
+
+    const mapProducts = (products: ProductDto[]) => {
+        return products.map(product => ({ key: product.id, label: product.name }));
+    }
+
+    useEffect(() => {
+        if (selectedProduct && autocompleteQuery !== selectedProduct?.name) {
+            setSelectedProduct(null)
+        }
+    }, [autocompleteQuery]);
+
+    useEffect(() => {
+        debouncedOnInputHandler(autocompleteQuery)
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!name.trim()) {
+        if (!autocompleteQuery.trim()) {
             setError("Название товара не может быть пустым");
             return;
         }
         setError("");
 
-        alert("Not implemented")
-        // await createOrUpdateProduct({ id: product?.id, name, companyId });
-        setName("");
+        if (selectedProduct) {
+            await linkProductAction(selectedProduct.id, companyId)
+        } else {
+            await createProductAction({ name: autocompleteQuery }, companyId);
+        }
+        // window.location.reload()
+        router.refresh()
+        setAutocompleteQuery('')
+        setSelectedProduct(null)
+        successHandler()
     };
 
+    const onInputHandler = useCallback(async (query: string) => {
+        setAutocompleteQuery(query);
+        // if (!value.trim()) {
+        //     setFetchedProducts([]);
+        //     return;
+        // }
+        const products = await getProductsAction(query.trim());
+        // console.log('products', products);
+        // if (products && products.length) {
+        setAutocompleteOptions(products);
+        // }
+    }, []);
+    const debouncedOnInputHandler = debounce(onInputHandler, 1000);
+    const selectHandler = (key) => {
+        // todo: use not index, but ID.
+        console.log('key', key)
+        const index = Number(key) - 1;
+        const currentProduct = autocompleteOptions[index];
+        if (currentProduct && currentProduct.id) {
+            setSelectedProduct(currentProduct);
+            setAutocompleteQuery(currentProduct.name);
+        }
+    }
+
     return (
-        <form onSubmit={handleSubmit} className="pb-5 pt-5">
-            <Input
-                className="mb-5"
+        <div onClickCapture={(e) => e.stopPropagation()}>
+            <form onSubmit={handleSubmit} className="pb-5 pt-5">
+            <Autocomplete
+                allowsCustomValue
+                className=" text-black mb-5"
+                defaultItems={mapProducts(autocompleteOptions)}
                 label="Название товара"
-                name="name"
-                value={name}
-                type="text"
-                onInput={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-                errorMessage={error}
-                isInvalid={!!error}
-            />
+                variant="flat"
+                onInputChange={debouncedOnInputHandler}
+                onSelectionChange={selectHandler}
+            >
+                {(item) => <AutocompleteItem key={item.key} className='text-black'>{item.label}</AutocompleteItem>}
+            </Autocomplete>
             <Button
-                disabled={!name.trim()}
+                disabled={!autocompleteQuery.trim()}
                 color="primary"
                 type="submit"
-                className="px-10 block mx-auto max-w-full w-full"
+                className="px-10 block mx-auto max-w-full w-full disabled:opacity-50"
             >
                 {product ? "Обновить" : "Создать"}
             </Button>
         </form>
+        </div>
     );
 }
