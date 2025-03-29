@@ -5,7 +5,7 @@ import {
     ModalContent,
     ModalHeader,
     ModalBody,
-  } from "@heroui/modal";
+} from "@heroui/modal";
 
   type Props = {
     isOpen: boolean;
@@ -14,21 +14,19 @@ import {
     title: string
   }
 
-  export default function ModalComponent({isOpen, onOpenChange, title, children}: Props) {
+export default function ModalComponent({isOpen, onOpenChange, title, children}: Props) {
     return (
-      <>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
-          <ModalContent>
-            {() => (
-              <>
-                <ModalHeader className="flex flex-col gap-1 text-black">{title}</ModalHeader>
-                <ModalBody>
-                  {children}
-                </ModalBody>
-              </>
-            )}
-          </ModalContent>
+            <ModalContent>
+                {() => (
+                    <>
+                        <ModalHeader className="flex flex-col gap-1 text-black">{title}</ModalHeader>
+                        <ModalBody>
+                            {children}
+                        </ModalBody>
+                    </>
+                )}
+            </ModalContent>
         </Modal>
-      </>
     );
-  }
+}
