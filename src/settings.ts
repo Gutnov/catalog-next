@@ -1,5 +1,6 @@
 export const MIN_COMPANY_YEAR = 1900
 export const DEFAULT_PRODUCTS_LIMIT = 3
+export const DEFAULT_COMPANIES_LIMIT = 20
 export const PRODUCTS_LIMIT_OPTIONS = [
     {key: '10', label: '10'},
     {key: '20', label: '20'},

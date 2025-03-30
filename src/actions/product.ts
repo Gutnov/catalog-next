@@ -28,15 +28,13 @@ export async function getProductsByCompanyId(companyId: number, page: number = 1
         order: [[{model: Product, as: 'product'}, 'name', 'ASC']]
     })
 
-    console.log('getProductsByCompanyId', offset, links.length, count, offset + links.length <= count)
-
     return {
         products: links.map(link=>{
             if (!link.product) throw new Error('Not correct used include')
             return { id: link.product.id, name: link.product.name }
         }),
         hasMore: offset + links.length < count,
-        count: 2,
+        count: count,
     };
 }
 

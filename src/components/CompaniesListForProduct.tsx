@@ -15,7 +15,7 @@ type Props = {
     totalCount: number;
 }
 
-export default function CompanyList({companies, totalCount}: Props){
+export default function CompaniesListForProduct({companies, totalCount}: Props){
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCompany, setSelectedCompany] = useState<CompanyDto|null>();
 
@@ -46,15 +46,5 @@ export default function CompanyList({companies, totalCount}: Props){
         router.push(pathname + '?' + searchParams.toString());
     }
 
-    return (<>
-        <ModalComponent isOpen={isOpen} onOpenChange={setIsOpen} title={selectedCompany ? 'Редактирование компании' : 'Добавление компании'}>
-            <CompanyForm company={selectedCompany} />
-        </ModalComponent>
-
-        <Button onPress={() => openCompanyForm(null)} color='secondary' className='mb-5'>
-            Добавить компанию
-            <PlusIcon/>
-        </Button>
-        <TableComponent openEditModal={openCompanyForm} list={companies} onChangePage={changePage} totalPages={Math.ceil(totalCount/itemsPerPage)} page={page}/>
-    </>)
+    return (<TableComponent openEditModal={openCompanyForm} list={companies} onChangePage={changePage} totalPages={Math.ceil(totalCount/itemsPerPage)} page={page}/>)
 }
