@@ -34,8 +34,8 @@ ProductCompany.init({
     tableName: 'product_companies',
     timestamps: false,
     indexes: [{
-        name: "product_company_unique",
-        fields: ["productId", "companyId"],
+        name: 'product_company_unique',
+        fields: ['productId', 'companyId'],
         unique: true
     }]
 })
@@ -52,7 +52,12 @@ Product.belongsToMany(Company, {
     otherKey: 'companyId'
 })
 
-ProductCompany.hasOne(Product, {
-    as: "product",
-    foreignKey: 'id',
-})
+ProductCompany.belongsTo(Product, {
+    foreignKey: 'productId',
+    as: 'product'
+});
+
+ProductCompany.belongsTo(Company, {
+    foreignKey: 'companyId',
+    as: 'company'
+});
